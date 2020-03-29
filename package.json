@@ -43,7 +43,7 @@
     "format": "prettier-eslint \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\" --write",
     "test:types": "dtslint types",
     "contributors": "all-contributors",
-    "prepare": "yarn build"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "vue": "^2.2.0"
