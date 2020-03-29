@@ -1,6 +1,7 @@
 import * as Vue from 'vue-tsx-support';
 import Component from 'vue-class-component';
 import { Prop, Provide, Inject } from 'vue-property-decorator';
+import Mixin from 'utils/mixin';
 import Cover from './Cover';
 import Icon from './Icon';
 import Main from './Main';
@@ -17,7 +18,7 @@ export interface PlayerProps {
   notice?: Notice;
 }
 
-@Component
+@Component({ mixins: [Mixin] })
 export default class Player extends Vue.Component<
   PlayerProps,
   ControllerEvents
@@ -26,7 +27,11 @@ export default class Player extends Vue.Component<
   private readonly notice!: Notice;
 
   @Inject()
-  private readonly aplayer!: { media: APlayer.Media };
+  private readonly aplayer!: APlayer.Options & {
+    media: APlayer.Media;
+  };
+
+  private readonly isMobile!: boolean;
 
   private get playIcon(): string {
     return this.aplayer.media.paused ? 'play' : 'pause';
@@ -82,15 +87,18 @@ export default class Player extends Vue.Component<
   }
 
   render() {
-    const { playIcon, notice } = this;
+    const { playIcon, notice, isMobile } = this;
+    const { filled } = this.aplayer;
 
     return (
       <div class="aplayer-body">
-        <Cover onClick={this.handleTogglePlay}>
-          <div class={`aplayer-button aplayer-${playIcon}`}>
-            <Icon type={playIcon} />
-          </div>
-        </Cover>
+        {(!filled || isMobile) ? (
+          <Cover onClick={this.handleTogglePlay}>
+            <div class={`aplayer-button aplayer-${playIcon}`}>
+              <Icon type={playIcon} />
+            </div>
+          </Cover>
+        ) : null}
         <Main>
           <Controller
             onSkipBack={this.handleSkipBack}
@@ -104,12 +112,16 @@ export default class Player extends Vue.Component<
             onChangeProgress={this.handleChangeProgress}
           />
         </Main>
-        <div class="aplayer-notice" style={{ opacity: notice.opacity }}>
-          {notice.text}
-        </div>
-        <div class="aplayer-miniswitcher" onClick={this.handleMiniSwitcher}>
-          <Button type="miniswitcher" icon="right" />
-        </div>
+        {(!filled) ? (
+          <div class="aplayer-notice" style={{ opacity: notice.opacity }}>
+            {notice.text}
+          </div>
+        ) : null}
+        {(!filled) ? (
+          <div class="aplayer-miniswitcher" onClick={this.handleMiniSwitcher}>
+            <Button type="miniswitcher" icon="right"/>
+          </div>
+        ) : null}
       </div>
     );
   }

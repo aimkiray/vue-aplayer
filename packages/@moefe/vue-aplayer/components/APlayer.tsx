@@ -46,6 +46,9 @@ export default class APlayer extends Vue.Component<
   private readonly mini!: boolean;
 
   @Prop({ type: Boolean, required: false, default: false })
+  private readonly filled!: boolean;
+
+  @Prop({ type: Boolean, required: false, default: false })
   private readonly autoplay!: boolean;
 
   @Prop({ type: String, required: false, default: '#b7daff' })
@@ -152,7 +155,7 @@ export default class APlayer extends Vue.Component<
   private isAwaitChangeProgressBar = false;
 
   // 是否是迷你模式
-  private isMini = this.mini !== null ? this.mini : this.fixed;
+  private isMini = this.mini !== null ? this.mini:(this.fixed && !this.filled);
 
   // 是否是 arrow 模式
   private isArrow = false;
@@ -789,6 +792,7 @@ export default class APlayer extends Vue.Component<
       fixed,
       lrcType,
       isMini,
+      filled,
       isMobile,
       isArrow,
       isLoading,
@@ -807,7 +811,8 @@ export default class APlayer extends Vue.Component<
           'aplayer-withlist': dataSource.length > 1,
           'aplayer-withlrc': !fixed && (lrcType !== 0 && lyricVisible),
           'aplayer-narrow': isMini,
-          'aplayer-fixed': fixed,
+          'aplayer-filled': filled && fixed && !isMobile,
+          'aplayer-fixed': fixed && (!filled || isMobile),
           'aplayer-mobile': isMobile,
           'aplayer-arrow': isArrow,
           'aplayer-loading': isLoading,

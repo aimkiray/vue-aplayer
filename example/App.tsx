@@ -12,6 +12,7 @@ Vue.use<APlayer.InstallOptions>(APlayerPlugin, {
 export default class App extends Vue {
   private readonly aplayer0: APlayer.Options = {
     fixed: true,
+    filled: true,
     lrcType: 3,
     listMaxHeight: 100,
     preload: 'auto',

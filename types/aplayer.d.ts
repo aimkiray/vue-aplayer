@@ -35,6 +35,7 @@ declare global {
 
     export interface Options {
       fixed?: boolean;
+      filled?: boolean;
       mini?: boolean;
       autoplay?: boolean;
       theme?: string;

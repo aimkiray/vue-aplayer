@@ -2,6 +2,7 @@ import * as Vue from 'vue-tsx-support';
 import Component from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import Touch from '@moefe/vue-touch';
+import Mixin from 'utils/mixin';
 import Icon from './Icon';
 import Button from './Button';
 import Progress from './Progress';
@@ -19,7 +20,7 @@ export interface ControllerEvents {
   onMiniSwitcher: void;
 }
 
-@Component
+@Component({ mixins: [Mixin] })
 export default class Controller extends Vue.Component<{}, ControllerEvents> {
   public readonly $refs!: {
     volumeBar: HTMLElement;
@@ -59,6 +60,8 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
 
   @Inject()
   private handleChangeVolume!: (volume: number) => void;
+
+  private readonly isMobile!: boolean;
 
   private get playIcon(): string {
     return this.aplayer.media.paused ? 'play' : 'pause';
@@ -109,9 +112,10 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
   }
 
   render() {
-    const { ptime, dtime, volumeIcon } = this;
+    const { ptime, dtime, volumeIcon, isMobile } = this;
     const {
       lrcType,
+      filled,
       currentTheme,
       currentVolume,
       currentOrder,
@@ -119,71 +123,107 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
     } = this.aplayer;
 
     return (
-      <div class="aplayer-controller">
-        <Progress />
-        <div class="aplayer-time">
+      <div>
+        {(filled && !isMobile) ? (
+          <Progress class="aplayer-bar-edge"/>
+        ) : null}
+        {(filled && !isMobile) ? (
+          <div class="aplayer-audio-control">
+            <span
+              class="aplayer-icon aplayer-icon-back"
+              onClick={this.handleSkipBack}
+            >
+              <Icon type="skip"/>
+            </span>
+            <span
+              class="aplayer-icon aplayer-icon-play"
+              onClick={this.handleTogglePlay}
+            >
+              <Icon type={this.playIcon}/>
+            </span>
+            <span
+              class="aplayer-icon aplayer-icon-forward"
+              onClick={this.handleSkipForward}
+            >
+              <Icon type="skip"/>
+            </span>
+          </div>
+        ) : null}
+        <div class="aplayer-controller">
+          {(!filled || isMobile) ? (
+            <Progress/>
+          ) : null}
+          <div class="aplayer-time">
           <span class="aplayer-time-inner">
             <span class="aplayer-ptime">{ptime}</span> /{' '}
             <span class="aplayer-dtime">{dtime}</span>{' '}
           </span>
-          <span
-            class="aplayer-icon aplayer-icon-back"
-            onClick={this.handleSkipBack}
-          >
-            <Icon type="skip" />
-          </span>
-          <span
-            class="aplayer-icon aplayer-icon-play"
-            onClick={this.handleTogglePlay}
-          >
-            <Icon type={this.playIcon} />
-          </span>
-          <span
-            class="aplayer-icon aplayer-icon-forward"
-            onClick={this.handleSkipForward}
-          >
-            <Icon type="skip" />
-          </span>
-          <div class="aplayer-volume-wrap">
-            <Button
-              type={`volume-${volumeIcon}`}
-              icon={`volume-${volumeIcon}`}
-              onClick={this.handleToggleVolume}
-            />
-            <Touch
-              class="aplayer-volume-bar-wrap"
-              panMoveClass="aplayer-volume-bar-wrap-active"
-              onPanMove={this.handlePanMove}
-            >
-              <div
-                ref="volumeBar"
-                class="aplayer-volume-bar"
-                onClick={this.handleClickVolumeBar}
+            {(!filled || isMobile) ? (
+              <span
+                class="aplayer-icon aplayer-icon-back"
+                onClick={this.handleSkipBack}
+              >
+              <Icon type="skip"/>
+            </span>
+            ) : null}
+            {(!filled || isMobile) ? (
+              <span
+                class="aplayer-icon aplayer-icon-play"
+                onClick={this.handleTogglePlay}
+              >
+              <Icon type={this.playIcon}/>
+            </span>
+            ) : null}
+            {(!filled || isMobile) ? (
+              <span
+                class="aplayer-icon aplayer-icon-forward"
+                onClick={this.handleSkipForward}
+              >
+              <Icon type="skip"/>
+            </span>
+            ) : null}
+            <div class="aplayer-volume-wrap">
+              <Button
+                type={`volume-${volumeIcon}`}
+                icon={`volume-${volumeIcon}`}
+                onClick={this.handleToggleVolume}
+              />
+              <Touch
+                class="aplayer-volume-bar-wrap"
+                panMoveClass="aplayer-volume-bar-wrap-active"
+                onPanMove={this.handlePanMove}
               >
                 <div
-                  class="aplayer-volume"
-                  style={{
-                    height: `${currentVolume * 100}%`,
-                    backgroundColor: currentTheme,
-                  }}
-                />
-              </div>
-            </Touch>
-          </div>{' '}
-          <Button
-            type="order"
-            icon={`order-${currentOrder}`}
-            onClick={this.handleToggleOrderMode}
-          />{' '}
-          <Button
-            type="loop"
-            icon={`loop-${currentLoop}`}
-            onClick={this.handleToggleLoopMode}
-          />{' '}
-          <Button type="menu" icon="menu" onClick={this.handleTogglePlaylist} />
-          {lrcType !== 0 ? (
-            <Button type="lrc" icon="lrc" onClick={this.handleToggleLyric} />
-          ) : null}
+                  ref="volumeBar"
+                  class="aplayer-volume-bar"
+                  onClick={this.handleClickVolumeBar}
+                >
+                  <div
+                    class="aplayer-volume"
+                    style={{
+                      height: `${currentVolume * 100}%`,
+                      backgroundColor: currentTheme,
+                    }}
+                  />
+                </div>
+              </Touch>
+            </div>
+            {' '}
+            <Button
+              type="order"
+              icon={`order-${currentOrder}`}
+              onClick={this.handleToggleOrderMode}
+            />{' '}
+            <Button
+              type="loop"
+              icon={`loop-${currentLoop}`}
+              onClick={this.handleToggleLoopMode}
+            />{' '}
+            <Button type="menu" icon="menu" onClick={this.handleTogglePlaylist}/>
+            {lrcType !== 0 ? (
+              <Button type="lrc" icon="lrc" onClick={this.handleToggleLyric}/>
+            ) : null}
+          </div>
         </div>
       </div>
     );
