@@ -28,6 +28,8 @@ declare global {
       url: string;
       cover?: string;
       lrc?: string;
+      tlrc?: string;
+      plname?: string;
       theme?: string;
       type?: AudioType;
       speed?: number;

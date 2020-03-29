@@ -27,6 +27,8 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private lrc = '';
 
+  private tlrc = '';
+
   private xhr = new HttpRequest();
 
   private isLoading = false;
@@ -46,6 +48,10 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private get parsed(): Array<LRC> {
     return this.parseLRC(this.lrc);
+  }
+
+  private get parsedTrans(): Array<LRC> {
+    return this.parseLRC(this.tlrc);
   }
 
   private get current(): LRC {
