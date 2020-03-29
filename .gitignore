@@ -1,6 +1,5 @@
 .DS_Store
 node_modules
-/dist
 /demo
 
 # local env files
@@ -19,3 +18,23 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+/.prettierrc
+/.eslintrc.js
+/.babelrc
+/logo/
+/packages/
+/utils/
+/docs/
+/example/
+/.postcssrc.js
+/.eslintignore
+/.all-contributorsrc
+/.travis.yml
+/.prettierignore
+/.editorconfig
+/package-lock.json
+/tsconfig.json
+/vue.config.js
+/yarn.lock
+/demo/
+/.vscode/
