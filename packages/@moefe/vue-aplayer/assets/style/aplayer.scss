@@ -205,7 +205,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
     margin: 0;
     z-index: 99;
     overflow: visible;
-    min-width: 500px;
+    min-width: 400px;
     box-shadow: none;
 
     .aplayer-list {
@@ -266,15 +266,15 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         max-width: 50px;
         border-radius: 2px;
         float: left;
-        margin-left: 38%;
+        margin-left: 40%;
         margin-top: 8px;
 
         @media(max-width: 1100px) {
-          margin-left: 33%;
+          margin-left: 38%;
         }
 
         @media(max-width: 768px) {
-          //margin-left: 33%;
+          margin-left: 36%;
           opacity: 0;
           width: 0;
         }
@@ -312,9 +312,13 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
       .aplayer-controller {
         position: absolute;
         right: 0;
-        left: 0;
-        bottom: 20px;
+        left: 40px;
+        bottom: 0;
         display: block;
+
+        @media(max-width: 768px) {
+          left: 20px;
+        }
 
         .aplayer-time {
           position: relative;
@@ -328,8 +332,8 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
           .aplayer-time-inner {
             vertical-align: middle;
             position: absolute;
-            left: 170px;
-            bottom: 4px;
+            left: 150px;
+            bottom: 24px;
 
             @media(max-width: 768px) {
               left: 150px;
@@ -348,6 +352,21 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         .aplayer-icon-play,
         .aplayer-icon-forward {
           position: absolute;
+          bottom: 12px;
+          width: 40px;
+          height: 40px;
+        }
+
+        .aplayer-icon-back {
+          left: 0;
+        }
+
+        .aplayer-icon-play {
+          left: 50px;
+        }
+
+        .aplayer-icon-forward {
+          left: 100px;
         }
 
         .aplayer-icon-menu,
@@ -356,21 +375,9 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         .aplayer-icon-order,
         .aplayer-volume-wrap {
           position: absolute;
-          bottom: 0;
+          bottom: 20px;
           width: 25px;
           height: 25px;
-        }
-
-        .aplayer-icon-back {
-          right: 75px;
-        }
-
-        .aplayer-icon-play {
-          right: 50px;
-        }
-
-        .aplayer-icon-forward {
-          right: 25px;
         }
 
         .aplayer-icon-menu {
@@ -391,17 +398,48 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
 
         .aplayer-volume-wrap {
           right: 180px;
-          .aplayer-icon-volume-off {
+
+          .aplayer-icon-volume-off,
+          .aplayer-icon-volume-down,
+          .aplayer-icon-volume-up {
             width: 25px;
             height: 25px;
           }
-          .aplayer-icon-volume-down {
-            width: 25px;
-            height: 25px;
+
+          &:hover .aplayer-volume-bar-wrap {
+            width: 60px;
           }
+
           .aplayer-volume-bar-wrap {
-            bottom: 30px;
-            right: 6px;
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            width: 0;
+            height: 25px;
+            z-index: 99;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
+
+            &.aplayer-volume-bar-wrap-active {
+              width: 60px;
+            }
+
+            .aplayer-volume-bar {
+              position: absolute;
+              bottom: 0;
+              width: 60px;
+              height: 5px;
+              background: #aaa;
+              border-radius: 2.5px;
+              overflow: hidden;
+
+              .aplayer-volume {
+                position: absolute;
+                bottom: 0;
+                height: 5px;
+                transition: all 0.1s ease;
+              }
+            }
           }
         }
 
@@ -412,49 +450,6 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
             position: absolute;
             animation: rotate 1s linear infinite;
           }
-        }
-      }
-
-      .aplayer-audio-control {
-        position: absolute;
-        left: 40px;
-        bottom: 12px;
-
-        @media(max-width: 768px) {
-          left: 20px;
-        }
-
-        .aplayer-icon-back,
-        .aplayer-icon-play,
-        .aplayer-icon-forward,
-        .aplayer-icon-lrc {
-          display: inline-block;
-
-          svg path {
-            fill: #666666;
-          }
-        }
-
-        .aplayer-icon-back,
-        .aplayer-icon-play,
-        .aplayer-icon-forward,
-        .aplayer-icon-menu {
-          position: absolute;
-          bottom: 0;
-          width: 40px;
-          height: 40px;
-        }
-
-        .aplayer-icon-back {
-          left: 0;
-        }
-
-        .aplayer-icon-play {
-          left: 40px;
-        }
-
-        .aplayer-icon-forward {
-          left: 80px;
         }
       }
 

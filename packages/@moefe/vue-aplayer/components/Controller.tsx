@@ -98,14 +98,26 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
   }
 
   private handlePanMove(e: MouseEvent | TouchEvent) {
+    const { filled } = this.aplayer;
     const target = this.$refs.volumeBar;
-    const targetTop = target.getBoundingClientRect().bottom;
-    if (targetTop <= 0) return; // 音量控制面板已隐藏
-    const clientY = !e.type.startsWith('touch')
-      ? (e as MouseEvent).clientY
-      : (e as TouchEvent).changedTouches[0].clientY;
-    const offsetTop = Math.round(targetTop - clientY);
-    let volume = offsetTop / target.offsetHeight;
+    const targetV = filled
+      ? target.getBoundingClientRect().right
+      : target.getBoundingClientRect().bottom;
+    if (targetV <= 0) return; // 音量控制面板已隐藏
+    let clientV = 0;
+    if (filled) {
+      clientV = !e.type.startsWith('touch')
+        ? (e as MouseEvent).clientX
+        : (e as TouchEvent).changedTouches[0].clientX;
+    } else {
+      clientV = !e.type.startsWith('touch')
+        ? (e as MouseEvent).clientY
+        : (e as TouchEvent).changedTouches[0].clientY;
+    }
+    const offsetTop = Math.round(targetV - clientV);
+    let volume = filled
+      ? offsetTop / target.offsetWidth
+      : offsetTop / target.offsetHeight;
     volume = Math.min(volume, 1);
     volume = Math.max(volume, 0);
     this.handleChangeVolume(volume);
@@ -127,8 +139,15 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
         {(filled && !isMobile) ? (
           <Progress class="aplayer-bar-edge"/>
         ) : null}
-        {(filled && !isMobile) ? (
-          <div class="aplayer-audio-control">
+        <div class="aplayer-controller">
+          {(!filled || isMobile) ? (
+            <Progress/>
+          ) : null}
+          <div class="aplayer-time">
+            <span class="aplayer-time-inner">
+              <span class="aplayer-ptime">{ptime}</span> /{' '}
+              <span class="aplayer-dtime">{dtime}</span>{' '}
+            </span>
             <span
               class="aplayer-icon aplayer-icon-back"
               onClick={this.handleSkipBack}
@@ -147,41 +166,6 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
             >
               <Icon type="skip"/>
             </span>
-          </div>
-        ) : null}
-        <div class="aplayer-controller">
-          {(!filled || isMobile) ? (
-            <Progress/>
-          ) : null}
-          <div class="aplayer-time">
-          <span class="aplayer-time-inner">
-            <span class="aplayer-ptime">{ptime}</span> /{' '}
-            <span class="aplayer-dtime">{dtime}</span>{' '}
-          </span>
-            {(!filled || isMobile) ? (
-              <span
-                class="aplayer-icon aplayer-icon-back"
-                onClick={this.handleSkipBack}
-              >
-              <Icon type="skip"/>
-            </span>
-            ) : null}
-            {(!filled || isMobile) ? (
-              <span
-                class="aplayer-icon aplayer-icon-play"
-                onClick={this.handleTogglePlay}
-              >
-              <Icon type={this.playIcon}/>
-            </span>
-            ) : null}
-            {(!filled || isMobile) ? (
-              <span
-                class="aplayer-icon aplayer-icon-forward"
-                onClick={this.handleSkipForward}
-              >
-              <Icon type="skip"/>
-            </span>
-            ) : null}
             <div class="aplayer-volume-wrap">
               <Button
                 type={`volume-${volumeIcon}`}
@@ -198,13 +182,23 @@ export default class Controller extends Vue.Component<{}, ControllerEvents> {
                   class="aplayer-volume-bar"
                   onClick={this.handleClickVolumeBar}
                 >
-                  <div
-                    class="aplayer-volume"
-                    style={{
-                      height: `${currentVolume * 100}%`,
-                      backgroundColor: currentTheme,
-                    }}
-                  />
+                  {(filled && !isMobile) ? (
+                    <div
+                      class="aplayer-volume"
+                      style={{
+                        width: `${currentVolume * 100}%`,
+                        backgroundColor: currentTheme,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      class="aplayer-volume"
+                      style={{
+                        height: `${currentVolume * 100}%`,
+                        backgroundColor: currentTheme,
+                      }}
+                    />
+                  )}
                 </div>
               </Touch>
             </div>
