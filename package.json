@@ -31,6 +31,8 @@
   ],
   "scripts": {
     "prepublishOnly": "yarn build",
+    "prepare": "yarn git && yarn build",
+    "git": "git init && git checkout -b magic && git add . && git commit -m 'build'",
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build --report --target lib --name VueAPlayer packages/@moefe/vue-aplayer/index.ts",
     "build:example": "vue-cli-service build --dest demo",
@@ -42,8 +44,7 @@
     "lint:prettier": "prettier-eslint-check \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\"",
     "format": "prettier-eslint \"**/*.{js,jsx,json,ts,tsx,scss,vue,md}\" --write",
     "test:types": "dtslint types",
-    "contributors": "all-contributors",
-    "prepare": "npm run build"
+    "contributors": "all-contributors"
   },
   "peerDependencies": {
     "vue": "^2.2.0"
