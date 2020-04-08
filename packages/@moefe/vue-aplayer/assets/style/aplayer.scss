@@ -238,17 +238,43 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
     .aplayer-lrc {
       display: block;
       position: fixed;
-      bottom: 75px;
+      bottom: 86px;
       left: 0;
       right: 62%;
       margin: 0;
       z-index: 97;
+      height: 160px;
       //pointer-events: none;
-      text-shadow: -1px -1px 0 #fff;
+      //text-shadow: -1px -1px 0 #fff;
 
       &:before,
       &:after {
         display: none;
+      }
+
+      p {
+        font-size: 16px;
+        color: #666;
+        line-height: 20px !important;
+        height: 20px !important;
+        white-space: pre;
+        padding: 0 !important;
+        margin: 20px 0 !important;
+        -webkit-transition-property: font-size, color, opacity;
+        transition-property: font-size, color, opacity;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+        -webkit-transition-duration: 0.5s;
+        transition-duration: 0.5s;
+        opacity: 0.4;
+        overflow: hidden;
+
+        &.aplayer-lrc-current {
+          opacity: 1;
+          overflow: visible;
+          height: initial !important;
+          min-height: 20px;
+        }
       }
     }
 
@@ -529,7 +555,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
           .aplayer-thumb {
             position: absolute;
             top: 0;
-            right: 5px;
+            right: 2px;
             margin-top: -5px;
             margin-right: -10px;
             height: 15px;

@@ -30,6 +30,8 @@
 <template>
   <!--
     指定 lrcType 为 3，表示 audio.lrc 的值是 lrc 文件地址，
+    audio.tlrc 的值是歌词翻译文件的地址，
+    如果只想显示歌词翻译，请将翻译文件地址填在 audio.lrc，tlrc不要填，
     将通过 `fetch` 获取 lrc 歌词文本。
   -->
   <aplayer audio=":audio" :lrcType="3" />

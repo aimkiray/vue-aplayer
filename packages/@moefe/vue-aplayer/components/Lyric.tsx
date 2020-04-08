@@ -33,6 +33,17 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private isLoading = false;
 
+  // eslint-disable-next-line no-nested-ternary
+  private lineHeight = this.aplayer.filled
+    ? this.aplayer.currentMusic.tlrc
+      ? 40
+      : 20
+    : 16;
+
+  private fontSize = this.aplayer.filled ? 16 : 12;
+
+  private lineMargin = this.aplayer.filled ? 20 : 0;
+
   private get noLyric(): string {
     /* eslint-disable no-nested-ternary */
     const { currentMusic } = this.aplayer;
@@ -69,20 +80,44 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private get translateY(): number {
     const { current, parsed } = this;
+    const { filled } = this.aplayer;
     if (parsed.length <= 0) return 0;
     const index = parsed.indexOf(current);
-    const isLast = index === parsed.length - 1;
-    return (isLast ? (index - 1) * 16 : index * 16) * -1;
+    const isLast = index === parsed.length - (filled ? 3 : 1);
+
+    if (filled && index < 3) {
+      return 0;
+    }
+    return (
+      isLast
+        ? (filled ? index - 3 : index - 1) * (this.lineHeight + this.lineMargin)
+        : (filled ? index - 2 : index) * (this.lineHeight + this.lineMargin)
+    ) * -1;
   }
 
-  private get style() {
+  private get lrcStyle() {
+    return {
+      height: `${this.aplayer.filled ? (this.lineHeight + this.lineMargin) * 5 : 32}px`,
+    };
+  }
+
+  private get scrollStyle() {
     return {
       transitionDuration: `${this.transitionDuration}ms`,
       transform: `translate3d(0, ${this.translateY}px, 0)`,
     };
   }
 
-  private getLyricFromCurrentMusic() {
+  private get pStyle() {
+    return {
+      fontSize: `${this.fontSize}px`,
+      lineHeight: `${this.lineHeight}px !important`,
+      height: `${this.lineHeight}px !important`,
+      margin: `${this.lineMargin}px 0 !important`,
+    };
+  }
+
+  private getLyricFromCurrentMusic(trans: boolean) {
     return new Promise<string>((resolve, reject) => {
       const { lrcType, currentMusic } = this.aplayer;
       switch (lrcType) {
@@ -90,10 +125,18 @@ export default class Lyric extends Vue.Component<LyricProps> {
           resolve('');
           break;
         case 1:
-          resolve(currentMusic.lrc);
+          if (trans) {
+            resolve(currentMusic.tlrc);
+          } else {
+            resolve(currentMusic.lrc);
+          }
           break;
         case 3:
-          resolve(currentMusic.lrc ? this.xhr.download(currentMusic.lrc) : '');
+          if (trans) {
+            resolve(currentMusic.tlrc ? this.xhr.download(currentMusic.tlrc) : '');
+          } else {
+            resolve(currentMusic.lrc ? this.xhr.download(currentMusic.lrc) : '');
+          }
           break;
         default:
           reject(new Error(`Illegal lrcType: ${lrcType}`));
@@ -144,36 +187,58 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   @Watch('aplayer.lrcType', { immediate: true })
   @Watch('aplayer.currentMusic.lrc', { immediate: true })
+  @Watch('aplayer.currentMusic.tlrc', { immediate: true })
   private async handleChange() {
     try {
       this.isLoading = true;
       this.lrc = '';
-      this.lrc = await this.getLyricFromCurrentMusic();
+      this.tlrc = '';
+      this.lrc = await this.getLyricFromCurrentMusic(false);
+      this.tlrc = await this.getLyricFromCurrentMusic(true);
     } finally {
       this.isLoading = false;
     }
   }
 
   render() {
-    const { visible, style, parsed, current, noLyric } = this;
+    const {
+      visible,
+      lrcStyle,
+      scrollStyle,
+      pStyle,
+      parsed,
+      parsedTrans,
+      current,
+      noLyric,
+    } = this;
 
     return (
       <div
+        style={lrcStyle}
         class={classNames({
           'aplayer-lrc': true,
           'aplayer-lrc-hide': !visible,
         })}
       >
-        <div class="aplayer-lrc-contents" style={style}>
+        <div class="aplayer-lrc-contents" style={scrollStyle}>
           {parsed.length > 0 ? (
             parsed.map((item, index) => (
               <p
+                style={pStyle}
                 key={item.time}
                 class={classNames({
                   'aplayer-lrc-current': current.time === item.time,
                 })}
               >
                 {item.text}
+                {parsedTrans.map((trans, key) => {
+                  if (trans.time === item.time) {
+                    // 用完就丢，渣优化
+                    // parsedTrans.splice(key, 1);
+                    return `\n${trans.text}`;
+                  }
+                  return '';
+                })}
               </p>
             ))
           ) : (

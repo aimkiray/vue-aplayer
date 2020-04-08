@@ -15,6 +15,16 @@ HTML 中的特性名是大小写不敏感的，所以浏览器会把所有大写
 - **默认值**：`false`
 - **描述**：是否开启吸底模式
 
+## filled <Badge text="可选" />
+
+::: tip 提示
+只有开启吸低模式，该选项才有效
+:::
+
+- **类型**：`boolean?`
+- **默认值**：`false`
+- **描述**：是否铺满底部
+
 ## mini <Badge text="可选" />
 
 ::: tip 提示
@@ -111,6 +121,7 @@ declare namespace APlayer {
     url: string; // 音频播放地址
     cover: string; // 音频封面
     lrc?: string; // lrc 歌词
+    tlrc?: string; // lrc 歌词翻译（lrc 不为空）
     theme?: string; // 单曲主题色，它将覆盖全局的默认主题色
     type?: AudioType; // 指定音频的类型
     speed?: number; // 单曲播放速度

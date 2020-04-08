@@ -171,7 +171,7 @@ export default class APlayer extends Vue.Component<
   }
 
   // 控制迷你模式下的歌词是否可见
-  private lyricVisible = true;
+  private lyricVisible = this.filled;
 
   // 封面图片对象
   private img = new Image();
