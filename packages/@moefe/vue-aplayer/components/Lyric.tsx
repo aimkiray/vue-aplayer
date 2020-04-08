@@ -82,14 +82,16 @@ export default class Lyric extends Vue.Component<LyricProps> {
     const { filled } = this.aplayer;
     if (parsed.length <= 0) return 0;
     const index = parsed.indexOf(current);
-    const isLast = index === parsed.length - (filled ? 3 : 1);
+    const isLast = index >= parsed.length - (filled ? 3 : 1);
 
+    // 填充底部支持多行歌词滚动
     if (filled && index < 3) {
       return 0;
     }
     return (
       isLast
-        ? (filled ? index - 3 : index - 1) * (this.pHeight + this.lineMargin)
+        // eslint-disable-next-line max-len
+        ? (filled ? parsed.length - 5 : index - 1) * (this.pHeight + this.lineMargin)
         : (filled ? index - 2 : index) * (this.pHeight + this.lineMargin)
     ) * -1;
   }
