@@ -34,11 +34,7 @@ export default class Lyric extends Vue.Component<LyricProps> {
   private isLoading = false;
 
   // eslint-disable-next-line no-nested-ternary
-  private lineHeight = this.aplayer.filled
-    ? this.aplayer.currentMusic.tlrc
-      ? 40
-      : 20
-    : 16;
+  private lineHeight = this.aplayer.filled ? 20 : 16;
 
   private fontSize = this.aplayer.filled ? 16 : 12;
 
