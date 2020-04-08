@@ -33,8 +33,11 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private isLoading = false;
 
-  // eslint-disable-next-line no-nested-ternary
   private lineHeight = this.aplayer.filled ? 20 : 16;
+
+  private pHeight = this.aplayer.currentMusic.tlrc
+    ? this.lineHeight * 2
+    : this.lineHeight;
 
   private fontSize = this.aplayer.filled ? 16 : 12;
 
@@ -86,14 +89,14 @@ export default class Lyric extends Vue.Component<LyricProps> {
     }
     return (
       isLast
-        ? (filled ? index - 3 : index - 1) * (this.lineHeight + this.lineMargin)
-        : (filled ? index - 2 : index) * (this.lineHeight + this.lineMargin)
+        ? (filled ? index - 3 : index - 1) * (this.pHeight + this.lineMargin)
+        : (filled ? index - 2 : index) * (this.pHeight + this.lineMargin)
     ) * -1;
   }
 
   private get lrcStyle() {
     return {
-      height: `${this.aplayer.filled ? (this.lineHeight + this.lineMargin) * 5 : 32}px`,
+      height: `${this.aplayer.filled ? (this.pHeight + this.lineMargin) * 5 : 32}px`,
     };
   }
 
@@ -108,7 +111,7 @@ export default class Lyric extends Vue.Component<LyricProps> {
     return {
       fontSize: `${this.fontSize}px`,
       lineHeight: `${this.lineHeight}px !important`,
-      height: `${this.lineHeight}px !important`,
+      height: `${this.pHeight}px !important`,
       margin: `${this.lineMargin}px 0 !important`,
     };
   }
