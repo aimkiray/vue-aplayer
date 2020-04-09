@@ -86,19 +86,12 @@ export default class Player extends Vue.Component<
     this.$emit('miniSwitcher');
   }
 
-  private get bodyStyle() {
-    return {
-      paddingRight: `${this.aplayer.filled ? 0 : 18}px`,
-      width: `calc(100% - ${this.aplayer.filled ? 0 : 18}px)`,
-    };
-  }
-
   render() {
-    const { playIcon, notice, isMobile, bodyStyle } = this;
+    const { playIcon, notice, isMobile } = this;
     const { filled } = this.aplayer;
 
     return (
-      <div class="aplayer-body" style={bodyStyle}>
+      <div class="aplayer-body">
         {(!filled || isMobile) ? (
           <Cover onClick={this.handleTogglePlay}>
             <div class={`aplayer-button aplayer-${playIcon}`}>
@@ -124,11 +117,9 @@ export default class Player extends Vue.Component<
             {notice.text}
           </div>
         ) : null}
-        {(!filled) ? (
-          <div class="aplayer-miniswitcher" onClick={this.handleMiniSwitcher}>
-            <Button type="miniswitcher" icon="right"/>
-          </div>
-        ) : null}
+        <div class="aplayer-miniswitcher" onClick={this.handleMiniSwitcher}>
+          <Button type="miniswitcher" icon="right"/>
+        </div>
       </div>
     );
   }

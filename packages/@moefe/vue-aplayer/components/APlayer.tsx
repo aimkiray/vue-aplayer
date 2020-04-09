@@ -42,7 +42,7 @@ export default class APlayer extends Vue.Component<
   @Prop({ type: Boolean, required: false, default: false })
   private readonly fixed!: boolean;
 
-  @Prop({ type: Boolean, required: false, default: null })
+  @Prop({ type: Boolean, required: false, default: false })
   private readonly mini!: boolean;
 
   @Prop({ type: Boolean, required: false, default: false })
