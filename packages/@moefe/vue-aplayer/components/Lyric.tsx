@@ -44,8 +44,8 @@ export default class Lyric extends Vue.Component<LyricProps> {
     // eslint-disable-next-line no-nested-ternary
     return this.freeStyle
       ? this.aplayer.currentMusic.tlrc
-        ? 20
-        : 40
+        ? 18
+        : 36
       : 16;
   }
 
@@ -56,11 +56,11 @@ export default class Lyric extends Vue.Component<LyricProps> {
   }
 
   private get fontSize() {
-    return this.freeStyle ? 16 : 12;
+    return this.freeStyle ? 14 : 12;
   }
 
   private get lineMargin() {
-    return this.freeStyle ? 20 : 0;
+    return this.freeStyle ? 18 : 0;
   }
 
   private get noLyric(): string {

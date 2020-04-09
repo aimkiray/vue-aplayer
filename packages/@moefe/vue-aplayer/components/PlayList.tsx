@@ -52,7 +52,7 @@ export default class PlayList extends Vue.Component<
     // eslint-disable-next-line no-nested-ternary
     return visible
       ? this.freeStyle
-        ? 323
+        ? 293
         : Math.min(dataSource.length * 33, Number(this.aplayer.listMaxHeight))
       : 0;
   }
