@@ -214,6 +214,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
       border-bottom: none;
       box-sizing: border-box;
       z-index: 98;
+      //height: 323px !important;
     }
 
     .aplayer-body {
@@ -237,13 +238,17 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
 
     .aplayer-lrc {
       display: block;
-      position: fixed;
-      bottom: 86px;
-      left: 0;
-      right: 62%;
+      position: absolute;
+      bottom: 66px;
+      right: 400px;
       margin: 0;
       z-index: 97;
       height: 160px;
+      min-width: 400px;
+      padding: 0 40px 20px;
+      background: #fff;
+      border: 1px solid #eee;
+
       //pointer-events: none;
       //text-shadow: -1px -1px 0 #fff;
 

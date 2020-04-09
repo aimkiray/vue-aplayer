@@ -2,6 +2,7 @@ import * as Vue from 'vue-tsx-support';
 import Component from 'vue-class-component';
 import { Prop, Inject, Watch } from 'vue-property-decorator';
 import classNames from 'classnames';
+import Mixin from 'utils/mixin';
 import { HttpRequest } from '../utils';
 
 interface LRC {
@@ -13,7 +14,7 @@ export interface LyricProps {
   visible?: boolean;
 }
 
-@Component
+@Component({ mixins: [Mixin] })
 export default class Lyric extends Vue.Component<LyricProps> {
   @Prop({ type: Boolean, required: false, default: true })
   private readonly visible?: boolean;
@@ -25,6 +26,8 @@ export default class Lyric extends Vue.Component<LyricProps> {
     currentPlayed: number;
   };
 
+  private readonly isMobile!: boolean;
+
   private lrc = '';
 
   private tlrc = '';
@@ -33,15 +36,32 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private isLoading = false;
 
-  private lineHeight = this.aplayer.filled ? 20 : 16;
+  private get freeStyle() {
+    return (this.aplayer.filled && !this.isMobile);
+  }
 
-  private pHeight = this.aplayer.currentMusic.tlrc
-    ? this.lineHeight * 2
-    : this.lineHeight;
+  private get lineHeight() {
+    // eslint-disable-next-line no-nested-ternary
+    return this.freeStyle
+      ? this.aplayer.currentMusic.tlrc
+        ? 20
+        : 40
+      : 16;
+  }
 
-  private fontSize = this.aplayer.filled ? 16 : 12;
+  private get pHeight() {
+    return this.aplayer.currentMusic.tlrc
+      ? this.lineHeight * 2
+      : this.lineHeight;
+  }
 
-  private lineMargin = this.aplayer.filled ? 20 : 0;
+  private get fontSize() {
+    return this.freeStyle ? 16 : 12;
+  }
+
+  private get lineMargin() {
+    return this.freeStyle ? 20 : 0;
+  }
 
   private get noLyric(): string {
     /* eslint-disable no-nested-ternary */
@@ -98,7 +118,7 @@ export default class Lyric extends Vue.Component<LyricProps> {
 
   private get lrcStyle() {
     return {
-      height: `${this.aplayer.filled ? (this.pHeight + this.lineMargin) * 5 : 32}px`,
+      height: `${this.freeStyle ? (this.pHeight + this.lineMargin) * 5 : 32}px`,
     };
   }
 

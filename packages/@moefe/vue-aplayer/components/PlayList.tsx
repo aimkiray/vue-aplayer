@@ -2,6 +2,7 @@ import * as Vue from 'vue-tsx-support';
 import Component from 'vue-class-component';
 import { Prop, Inject, Watch } from 'vue-property-decorator';
 import classNames from 'classnames';
+import Mixin from 'utils/mixin';
 
 export interface PlayListProps {
   visible?: boolean;
@@ -14,7 +15,7 @@ export interface PlayListEvents {
   onChange: (music: APlayer.Audio, index: number) => void;
 }
 
-@Component
+@Component({ mixins: [Mixin] })
 export default class PlayList extends Vue.Component<
   PlayListProps,
   PlayListEvents
@@ -35,15 +36,24 @@ export default class PlayList extends Vue.Component<
   @Prop({ type: Number, required: true })
   private readonly scrollTop!: number;
 
+  private readonly isMobile!: boolean;
+
   @Inject()
   private readonly aplayer!: APlayer.Options & {
     currentTheme: string;
   };
 
+  private get freeStyle() {
+    return (this.aplayer.filled && !this.isMobile);
+  }
+
   private get listHeight(): number {
     const { visible, dataSource } = this;
+    // eslint-disable-next-line no-nested-ternary
     return visible
-      ? Math.min(dataSource.length * 33, Number(this.aplayer.listMaxHeight))
+      ? this.freeStyle
+        ? 323
+        : Math.min(dataSource.length * 33, Number(this.aplayer.listMaxHeight))
       : 0;
   }
 
@@ -59,7 +69,7 @@ export default class PlayList extends Vue.Component<
 
   render() {
     const { listHeight, dataSource, currentMusic } = this;
-    const { currentTheme } = this.aplayer;
+    const { currentTheme, filled } = this.aplayer;
 
     return (
       <ol ref="list" class="aplayer-list" style={{ height: `${listHeight}px` }}>
