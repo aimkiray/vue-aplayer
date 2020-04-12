@@ -36,7 +36,7 @@ export default class Main extends Vue.Component<{}> {
     return (
       <div class="aplayer-info">
         {(filled && !isMobile) ? (
-          <Cover/>
+          <Cover />
         ) : null}
         <div class="aplayer-music">
           <span class="aplayer-title">{music.name}</span>

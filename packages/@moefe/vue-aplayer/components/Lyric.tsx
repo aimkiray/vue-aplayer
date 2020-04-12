@@ -37,7 +37,7 @@ export default class Lyric extends Vue.Component<LyricProps> {
   private isLoading = false;
 
   private get freeStyle() {
-    return (this.aplayer.filled && !this.isMobile);
+    return this.aplayer.filled && !this.isMobile;
   }
 
   private get lineHeight() {

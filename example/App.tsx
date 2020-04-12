@@ -3,6 +3,7 @@ import Comopnent from 'vue-class-component';
 import APlayerPlugin, { APlayer } from '@moefe/vue-aplayer';
 import { sleep } from 'utils';
 import './App.scss';
+import { log } from 'util';
 
 Vue.use<APlayer.InstallOptions>(APlayerPlugin, {
   productionTip: process.env.NODE_ENV !== 'development',
@@ -52,7 +53,7 @@ export default class App extends Vue {
           <h1>Vue-Aplayer</h1>
           <h3>🍰 A beautiful HTML5 music player for Vue.js.</h3>
           <div class="aplayer-wrap">
-            <APlayer {...{ props: aplayer1 }} />
+            <APlayer ref="aplayerz" {...{ props: aplayer1 }} />
           </div>
           <div class="landing-buttons">
             <a
